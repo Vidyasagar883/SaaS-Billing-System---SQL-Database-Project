@@ -7,27 +7,25 @@ trigger:
 - main
 
 pool:
-  name: SelfHostedLocal  # Your local agent pool
+  name: SelfHostedLocal  # your local agent
 
 variables:
-- group: SaaS_Billing_System_Variables  # Must include DB_HOST, DB_PORT, DB_USER, DB_PASSWORD, DB_NAME
+- group: SaaS_Billing_System_Variables  # contains DB_HOST, DB_PORT, DB_USER, DB_PASSWORD, DB_NAME
 
 steps:
-# Step 1: Echo info (optional)
-- script: |
-    echo "Starting MySQL table creation..."
-    echo "Target DB: $(DB_NAME) on host $(DB_HOST):$(DB_PORT)"
-  displayName: 'Info'
+- checkout: self  # ensures repo files are on local agent
 
-# Step 2: Run SQL script
-- script: |
-    echo "Running SQL script to create tables..."
-    mysql -h $(DB_HOST) -P $(DB_PORT) -u $(DB_USER) -p$(DB_PASSWORD) $(DB_NAME) <create_tables.sql
-  displayName: 'Create MySQL Tables'
+- powershell: |
+    $sqlFile = "$(Build.SourcesDirectory)\create_tables.sql"
+    Write-Host "Running SQL script: $sqlFile"
+    & "C:\Program Files\MySQL\MySQL Server 8.0\bin\mysql.exe" `
+        -h $(DB_HOST) `
+        -P $(DB_PORT) `
+        -u $(DB_USER) `
+        -p$(DB_PASSWORD) `
+        $(DB_NAME) `
+        < $sqlFile
+  displayName: 'Run SQL script on local MySQL'
 
-# Step 3: Confirm completion
-- script: |
-    echo "Tables creation completed."
-  displayName: 'Done'
 
 
