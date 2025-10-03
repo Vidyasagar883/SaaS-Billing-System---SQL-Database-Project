@@ -22,7 +22,7 @@ steps:
 # Step 2: Run SQL script
 - script: |
     echo "Running SQL script to create tables..."
-    mysql -h $(DB_HOST) -P $(DB_PORT) -u $(DB_USER) -p$(DB_PASSWORD) $(DB_NAME) < sql/create_tables.sql
+    mysql -h $(DB_HOST) -P $(DB_PORT) -u $(DB_USER) -p$(DB_PASSWORD) $(DB_NAME) <create_tables.sql
   displayName: 'Create MySQL Tables'
 
 # Step 3: Confirm completion
