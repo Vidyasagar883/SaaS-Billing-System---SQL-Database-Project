@@ -1,0 +1,33 @@
+# Starter pipeline
+# Start with a minimal pipeline that you can customize to build and deploy your code.
+# Add steps that build, run tests, deploy, and more:
+# https://aka.ms/yaml
+
+trigger:
+- main
+
+pool:
+  name: SelfHostedLocal  # Your local agent pool
+
+variables:
+- group: SaaS_Billing_System_Variables  # Must include DB_HOST, DB_PORT, DB_USER, DB_PASSWORD, DB_NAME
+
+steps:
+# Step 1: Echo info (optional)
+- script: |
+    echo "Starting MySQL table creation..."
+    echo "Target DB: $(DB_NAME) on host $(DB_HOST):$(DB_PORT)"
+  displayName: 'Info'
+
+# Step 2: Run SQL script
+- script: |
+    echo "Running SQL script to create tables..."
+    mysql -h $(DB_HOST) -P $(DB_PORT) -u $(DB_USER) -p$(DB_PASSWORD) $(DB_NAME) < sql/create_tables.sql
+  displayName: 'Create MySQL Tables'
+
+# Step 3: Confirm completion
+- script: |
+    echo "Tables creation completed."
+  displayName: 'Done'
+
+
