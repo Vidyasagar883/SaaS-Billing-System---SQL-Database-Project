@@ -1,0 +1,8 @@
+USE SaaS_Billing_System;
+
+CREATE TABLE IF NOT EXISTS Tenants (
+    tenant_id INT PRIMARY KEY AUTO_INCREMENT,
+    name VARCHAR(255) NOT NULL,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+);
+
